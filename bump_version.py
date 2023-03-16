@@ -18,6 +18,10 @@ PART__PRE_RELEASE = "prerelease"
 # single point of reference for remote
 REMOTE = "origin"
 
+# stable branch declarations
+MASTER_BRANCH = "master"
+DEV_BRANCH = "dev"
+
 logger = logging.getLogger()
 
 
@@ -217,23 +221,55 @@ def postversion():
     # ##########################
     # # check for stable release version, e.g. 5.0.24
 
-    # elif re.match(r"^\d+\.\d+\.\d+$", __version__):
+    elif re.match(r"^\d+\.\d+\.\d+$", __version__):
     #     print(f"Creating release branch release/{latest_tag}")
     #     completed_process = subprocess.run(["git", "checkout", "-b", f"release/{latest_tag}"], capture_output=True)
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
+    
+        print()
+        print("----------------------------------------------------------")
+        print(f"Creating release branch release/{latest_tag}")
+        print("----------------------------------------------------------")
+        cmd = f"git checkout -b release/{latest_tag}"
+        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        print(stdout)
+        print(stderr)
+        if status != 0:
+            raise Exception("Failed to create candidate branch")
 
-    #     print(f"Pushing release branch release/{latest_tag} to remote")
+        print()
+        print("----------------------------------------------------------")
+        print(f"Pushing release branch release/{latest_tag} to remote")
+        print("----------------------------------------------------------")
     #     completed_process = subprocess.run(["git", "push", REMOTE, f"release/{latest_tag}"], capture_output=True)
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
+        cmd = f"git checkout -b release/{latest_tag}"
+        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        print(stdout)
+        print(stderr)
+        if status != 0:
+            raise Exception("Failed to create candidate branch")
 
-    #     print(f"Pushing release tag {latest_tag} to remote")
+        print()
+        print("----------------------------------------------------------")
+        print(f"Pushing release tag {latest_tag} to remote")
+        print("----------------------------------------------------------")
     #     completed_process = subprocess.run(["git", "push", REMOTE, latest_tag], capture_output=True)
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
+        cmd = f"git checkout -b release/{latest_tag}"
+        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        print(stdout)
+        print(stderr)
+        if status != 0:
+            raise Exception("Failed to create candidate branch")
 
-    #     print("Fetching latest changes from 'master'")
+        print()
+        print("----------------------------------------------------------")
+        print(f"Fetching latest changes from '{MASTER_BRANCH}'")
+        print("----------------------------------------------------------")
     #     completed_process = subprocess.run(["git", "checkout", "master"], capture_output=True)
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
@@ -241,18 +277,45 @@ def postversion():
     #     completed_process = subprocess.run(["git", "pull"], capture_output=True)
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
+        cmd = f"git checkout {MASTER_BRANCH}"
+        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        print(stdout)
+        print(stderr)
+        if status != 0:
+            raise Exception("Failed to create candidate branch")
 
-    #     print(f"Merging release/{latest_tag} back into 'master'")
+        print()
+        print("----------------------------------------------------------")
+        print(f"Merging release/{latest_tag} back into '{MASTER_BRANCH}'")
+        print("----------------------------------------------------------")
     #     completed_process = subprocess.run(["git", "merge", f"release/{latest_tag}"], capture_output=True)
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
+        cmd = f"git merge release/{latest_tag}"
+        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        print(stdout)
+        print(stderr)
+        if status != 0:
+            raise Exception("Failed to create candidate branch")
 
-    #     print("Pushing release merge to master on remote")
+        print()
+        print("----------------------------------------------------------")
+        print(f"Pushing release merge to {MASTER_BRANCH} on remote")
+        print("----------------------------------------------------------")
     #     completed_process = subprocess.run(["git", "push", REMOTE, "master"], capture_output=True)
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
+        cmd = f"git push {REMOTE} {MASTER_BRANCH}"
+        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        print(stdout)
+        print(stderr)
+        if status != 0:
+            raise Exception("Failed to create candidate branch")
 
-    #     print("Fetching latest changes from 'dev'")
+        print()
+        print("----------------------------------------------------------")
+        print(f"Fetching latest changes from '{DEV_BRANCH}'")
+        print("----------------------------------------------------------")
     #     completed_process = subprocess.run(["git", "checkout", "dev"], capture_output=True)
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
@@ -260,16 +323,47 @@ def postversion():
     #     completed_process = subprocess.run(["git", "pull"], capture_output=True)
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
+        cmd = f"git checkout {DEV_BRANCH}"
+        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        print(stdout)
+        print(stderr)
+        if status != 0:
+            raise Exception("Failed to create candidate branch")
+        
+        cmd = "git pull"
+        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        print(stdout)
+        print(stderr)
+        if status != 0:
+            raise Exception("Failed to create candidate branch")
 
-    #     print(f"Merging release/{latest_tag} back into 'dev'")
+        print()
+        print("----------------------------------------------------------")
+        print(f"Merging release/{latest_tag} back into '{DEV_BRANCH}'")
+        print("----------------------------------------------------------")
     #     completed_process = subprocess.run(["git", "merge", f"release/{latest_tag}"], capture_output=True)
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
+        cmd = f"git merge release/{latest_tag}"
+        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        print(stdout)
+        print(stderr)
+        if status != 0:
+            raise Exception("Failed to create candidate branch")
 
-    #     print("Pushing release merge to dev on remote")
+        print()
+        print("----------------------------------------------------------")
+        print(f"Pushing release merge to {DEV_BRANCH} on remote")
+        print("----------------------------------------------------------")
     #     completed_process = subprocess.run(["git", "push", REMOTE, "dev"], capture_output=True)
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
+        cmd = f"git push {REMOTE} {DEV_BRANCH}"
+        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        print(stdout)
+        print(stderr)
+        if status != 0:
+            raise Exception("Failed to create candidate branch")
 
 
 if __name__ == "__main__":
