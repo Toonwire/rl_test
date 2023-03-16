@@ -4,6 +4,8 @@ import sys
 from subprocess import check_output
 from subprocess import PIPE
 from subprocess import Popen
+import git
+import logging
 
 # NOTE: Parts and their values must match the ones configured in `.bumpversion.cfg`
 PART__RELEASE = "release"
@@ -15,6 +17,8 @@ PART__PRE_RELEASE = "prerelease"
 
 # single point of reference for remote
 REMOTE = "origin"
+
+logger = logging.getLogger()
 
 
 def main():
@@ -140,7 +144,6 @@ def postversion():
     # # stdout = head_cmd.communicate()[0]
     # prev_tag = stdout.decode("ascii").strip()  # remove newline from decoded bytes
 
-    import git
     r = git.Repo(".")
 
 
@@ -176,6 +179,8 @@ def postversion():
         out = r.git.checkout("-b", f"candidate/{latest_tag}")
         print(out)
 
+        logger.info(out)
+
         print(f"Pushing candidate branch candidate/{latest_tag} to remote")
         out = r.git.push(REMOTE, f"candidate/{latest_tag}")
         print(out)
@@ -183,6 +188,8 @@ def postversion():
         print(f"Pushing candidate tag {latest_tag} to remote")
         out = r.git.push(REMOTE, latest_tag)
         print(out)
+
+
 
 
     # ##########################
