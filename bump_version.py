@@ -148,10 +148,7 @@ def postversion():
 
 
     latest_tag = r.git.describe("--abbrev=0")
-    prev_tag = r.git.describe("--abbrev=0", latest_tag+"^")
-
-    print(latest_tag)
-    print(prev_tag)
+    prev_tag = r.git.describe("--abbrev=0", f"{latest_tag}^")
 
     # ##########################
     # # CREATE RELEASE CANDIDATE
@@ -175,6 +172,8 @@ def postversion():
     #     print(completed_process.stderr.decode("ascii"))
 
     if re.match(r"^\d+\.\d+\.\d+-rc\.\d+$", __version__):
+        print()
+        print("----------------------------------------------------------")
         print(f"Creating candidate branch candidate/{latest_tag}")
         print("----------------------------------------------------------")
         # out = r.git.checkout("-b", f"candidate/{latest_tag}")
@@ -186,9 +185,8 @@ def postversion():
         if status != 0:
             raise Exception("Failed to create candidate branch")
 
-
+        print()
         print("----------------------------------------------------------")
-        print("----------------------------------------------------------\n")
         print(f"Pushing candidate branch candidate/{latest_tag} to remote")
         print("----------------------------------------------------------")
         cmd = f"git push {REMOTE} candidate/{latest_tag}"
@@ -199,8 +197,8 @@ def postversion():
             raise Exception("Failed to create candidate branch")
 
 
+        print()
         print("----------------------------------------------------------")
-        print("----------------------------------------------------------\n")
         print(f"Pushing candidate tag {latest_tag} to remote")
         print("----------------------------------------------------------")
         cmd = f"git push {REMOTE} {latest_tag}"
