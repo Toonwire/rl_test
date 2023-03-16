@@ -120,19 +120,25 @@ def postversion():
     stdout = latest_tag_cmd.communicate()[0]
     latest_tag = stdout.decode("ascii").strip()  # remove newline from decoded bytes
 
-    sorted_tags_cmd = Popen(["git", "tag", "--sort=creatordate"], stdout=PIPE)
-    print(sorted_tags_cmd.stdout.read(29))
-    tail_cmd = Popen(["tail", "-2"], stdin=sorted_tags_cmd.stdout, stdout=PIPE)
-    head_cmd = Popen(["head", "-1"], stdin=tail_cmd.stdout, stdout=PIPE)
+    # sorted_tags_cmd = Popen(["git", "tag", "--sort=creatordate"], stdout=PIPE)
+    # tail_cmd = Popen(["tail", "-2"], stdin=sorted_tags_cmd.stdout, stdout=PIPE)
+    # head_cmd = Popen(["head", "-1"], stdin=tail_cmd.stdout, stdout=PIPE)
 
-    if sorted_tags_cmd.stdout:
-        sorted_tags_cmd.stdout.close()  # allow sorted_tags_cmd to receive a SIGPIPE if prev_tag_cmd exits.
+    p = Popen("git tag --sort=creatordate | tail -2 | head -1")
 
-    if tail_cmd.stdout:
-        tail_cmd.stdout.close()  # allow tail_cmd to receive a SIGPIPE if head_cmd exits.
+    stdout = p.communicate()[0]
 
-    stdout = head_cmd.communicate()[0]
+    print(stdout.decode("ascii").strip())  # remove newline from decoded bytes
+
+    # if sorted_tags_cmd.stdout:
+    #     sorted_tags_cmd.stdout.close()  # allow sorted_tags_cmd to receive a SIGPIPE if prev_tag_cmd exits.
+
+    # if tail_cmd.stdout:
+    #     tail_cmd.stdout.close()  # allow tail_cmd to receive a SIGPIPE if head_cmd exits.
+
+    # stdout = head_cmd.communicate()[0]
     prev_tag = stdout.decode("ascii").strip()  # remove newline from decoded bytes
+
 
     ##########################
     # CREATE RELEASE CANDIDATE
