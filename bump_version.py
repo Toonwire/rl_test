@@ -245,7 +245,7 @@ def postversion():
     #     completed_process = subprocess.run(["git", "push", REMOTE, f"release/{latest_tag}"], capture_output=True)
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
-        cmd = f"git checkout -b release/{latest_tag}"
+        cmd = f"git push {REMOTE} release/{latest_tag}"
         status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
         print(stdout)
         print(stderr)
@@ -259,7 +259,7 @@ def postversion():
     #     completed_process = subprocess.run(["git", "push", REMOTE, latest_tag], capture_output=True)
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
-        cmd = f"git checkout -b release/{latest_tag}"
+        cmd = f"git push {REMOTE} {latest_tag}"
         status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
         print(stdout)
         print(stderr)
