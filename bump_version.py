@@ -171,6 +171,20 @@ def postversion():
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
 
+    if re.match(r"^\d+\.\d+\.\d+-rc\.\d+$", __version__):
+        print(f"Creating candidate branch candidate/{latest_tag}")
+        out = r.git.checkout("-b", f"candidate/{latest_tag}")
+        print(out)
+
+        print(f"Pushing candidate branch candidate/{latest_tag} to remote")
+        out = r.git.push(REMOTE, f"candidate/{latest_tag}")
+        print(out)
+
+        print(f"Pushing candidate tag {latest_tag} to remote")
+        out = r.git.push(REMOTE, latest_tag)
+        print(out)
+
+
     # ##########################
     # # CREATE RELEASE
     # ##########################
