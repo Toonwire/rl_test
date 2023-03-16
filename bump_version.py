@@ -124,11 +124,11 @@ def postversion():
     # tail_cmd = Popen(["tail", "-2"], stdin=sorted_tags_cmd.stdout, stdout=PIPE)
     # head_cmd = Popen(["head", "-1"], stdin=tail_cmd.stdout, stdout=PIPE)
 
-    p = Popen("git tag --sort=creatordate | tail -2 | head -1")
+    p = Popen("git tag --sort=creatordate | tail -2 | head -1", shell=True, stdout=PIPE)
 
     stdout, stderr = p.communicate()
 
-    print(stderr.decode("ascii").strip())  # remove newline from decoded bytes
+    print(stdout.decode("ascii").strip())  # remove newline from decoded bytes
     # print(stdout.decode("ascii").strip())  # remove newline from decoded bytes
 
     # if sorted_tags_cmd.stdout:
