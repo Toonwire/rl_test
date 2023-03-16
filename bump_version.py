@@ -119,12 +119,9 @@ def postversion():
     latest_tag_cmd = Popen(["git", "describe", "--exact-match", "--abbrev=0"], stdout=PIPE)
     stdout = latest_tag_cmd.communicate()[0]
     latest_tag = stdout.decode("ascii").strip()  # remove newline from decoded bytes
-    print(">>>>>>>> latest_tag")
-    print(latest_tag)
 
     sorted_tags_cmd = Popen(["git", "tag", "--sort=creatordate"], stdout=PIPE)
-    print(sorted_tags_cmd.stdout)
-    print(sorted_tags_cmd.stdout.decode("ascii"))
+    print(sorted_tags_cmd.stdout.read(29))
     tail_cmd = Popen(["tail", "-2"], stdin=sorted_tags_cmd.stdout, stdout=PIPE)
     head_cmd = Popen(["head", "-1"], stdin=tail_cmd.stdout, stdout=PIPE)
 
