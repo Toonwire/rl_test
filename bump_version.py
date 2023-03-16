@@ -178,10 +178,12 @@ def postversion():
         print(f"Creating candidate branch candidate/{latest_tag}")
         # out = r.git.checkout("-b", f"candidate/{latest_tag}")
         # out = r.create_head(f"candidate/{latest_tag}", extended_output=True)
-        out = r.git.execute(["git", "checkout", "-b", f"candidate/{latest_tag}"])
+        status, stdout, stderr = r.git.execute(["git", "checkout", "-b", f"candidate/{latest_tag}"], with_extended_output=True)
 
 
-        print(f"out= {out}")
+        print(f"status= {status}")
+        print(f"stdout= {stdout}")
+        print(f"stderr= {stderr}")
 
 
         print(f"Pushing candidate branch candidate/{latest_tag} to remote")
