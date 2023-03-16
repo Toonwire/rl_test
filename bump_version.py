@@ -111,7 +111,7 @@ def postversion():
     - Pushes the new version tag to remote.
     """
     # load version after bump
-    from Tricent.__version__ import __version__
+    from __version__ import __version__
 
     ##########################
     # GET TAG INFO FROM GIT
