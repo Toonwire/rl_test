@@ -183,22 +183,18 @@ def postversion():
         # out = r.git.checkout("-b", f"candidate/{latest_tag}")
         # out = r.create_head(f"candidate/{latest_tag}", extended_output=True)
         cmd = f"git checkout -b candidate/{latest_tag}"
-        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        _, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
         print(stdout)
         print(stderr)
-        if status != 0:
-            raise Exception("Failed to create candidate branch")
 
         print()
         print("----------------------------------------------------------")
         print(f"Pushing candidate branch candidate/{latest_tag} to remote")
         print("----------------------------------------------------------")
         cmd = f"git push {REMOTE} candidate/{latest_tag}"
-        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        _, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
         print(stdout)
         print(stderr)
-        if status != 0:
-            raise Exception("Failed to create candidate branch")
 
 
         print()
@@ -206,11 +202,9 @@ def postversion():
         print(f"Pushing candidate tag {latest_tag} to remote")
         print("----------------------------------------------------------")
         cmd = f"git push {REMOTE} {latest_tag}"
-        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        _, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
         print(stdout)
         print(stderr)
-        if status != 0:
-            raise Exception("Failed to create candidate branch")
 
 
 
@@ -232,11 +226,9 @@ def postversion():
         print(f"Creating release branch release/{latest_tag}")
         print("----------------------------------------------------------")
         cmd = f"git checkout -b release/{latest_tag}"
-        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        _, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
         print(stdout)
         print(stderr)
-        if status != 0:
-            raise Exception("Failed to create candidate branch")
 
         print()
         print("----------------------------------------------------------")
@@ -246,11 +238,9 @@ def postversion():
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
         cmd = f"git push {REMOTE} release/{latest_tag}"
-        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        _, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
         print(stdout)
         print(stderr)
-        if status != 0:
-            raise Exception("Failed to create candidate branch")
 
         print()
         print("----------------------------------------------------------")
@@ -260,11 +250,9 @@ def postversion():
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
         cmd = f"git push {REMOTE} {latest_tag}"
-        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        _, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
         print(stdout)
         print(stderr)
-        if status != 0:
-            raise Exception("Failed to create candidate branch")
 
         print()
         print("----------------------------------------------------------")
@@ -278,11 +266,9 @@ def postversion():
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
         cmd = f"git checkout {MASTER_BRANCH}"
-        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        _, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
         print(stdout)
         print(stderr)
-        if status != 0:
-            raise Exception("Failed to create candidate branch")
 
         print()
         print("----------------------------------------------------------")
@@ -292,11 +278,9 @@ def postversion():
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
         cmd = f"git merge release/{latest_tag}"
-        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        _, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
         print(stdout)
         print(stderr)
-        if status != 0:
-            raise Exception("Failed to create candidate branch")
 
         print()
         print("----------------------------------------------------------")
@@ -306,11 +290,9 @@ def postversion():
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
         cmd = f"git push {REMOTE} {MASTER_BRANCH}"
-        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        _, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
         print(stdout)
         print(stderr)
-        if status != 0:
-            raise Exception("Failed to create candidate branch")
 
         print()
         print("----------------------------------------------------------")
@@ -324,18 +306,14 @@ def postversion():
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
         cmd = f"git checkout {DEV_BRANCH}"
-        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        _, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
         print(stdout)
         print(stderr)
-        if status != 0:
-            raise Exception("Failed to create candidate branch")
         
         cmd = "git pull"
-        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        _, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
         print(stdout)
         print(stderr)
-        if status != 0:
-            raise Exception("Failed to create candidate branch")
 
         print()
         print("----------------------------------------------------------")
@@ -345,11 +323,9 @@ def postversion():
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
         cmd = f"git merge release/{latest_tag}"
-        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        _, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
         print(stdout)
         print(stderr)
-        if status != 0:
-            raise Exception("Failed to create candidate branch")
 
         print()
         print("----------------------------------------------------------")
@@ -359,11 +335,9 @@ def postversion():
     #     print(completed_process.stdout.decode("ascii"))
     #     print(completed_process.stderr.decode("ascii"))
         cmd = f"git push {REMOTE} {DEV_BRANCH}"
-        status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
+        _, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
         print(stdout)
         print(stderr)
-        if status != 0:
-            raise Exception("Failed to create candidate branch")
 
 
 if __name__ == "__main__":
