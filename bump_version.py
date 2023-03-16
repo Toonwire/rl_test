@@ -126,9 +126,10 @@ def postversion():
 
     p = Popen("git tag --sort=creatordate | tail -2 | head -1")
 
-    stdout = p.communicate()[0]
+    stdout, stderr = p.communicate()
 
-    print(stdout.decode("ascii").strip())  # remove newline from decoded bytes
+    print(stderr.decode("ascii").strip())  # remove newline from decoded bytes
+    # print(stdout.decode("ascii").strip())  # remove newline from decoded bytes
 
     # if sorted_tags_cmd.stdout:
     #     sorted_tags_cmd.stdout.close()  # allow sorted_tags_cmd to receive a SIGPIPE if prev_tag_cmd exits.
