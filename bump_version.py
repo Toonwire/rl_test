@@ -176,6 +176,7 @@ def postversion():
 
     if re.match(r"^\d+\.\d+\.\d+-rc\.\d+$", __version__):
         print(f"Creating candidate branch candidate/{latest_tag}")
+        print("----------------------------------------------------------")
         # out = r.git.checkout("-b", f"candidate/{latest_tag}")
         # out = r.create_head(f"candidate/{latest_tag}", extended_output=True)
         cmd = f"git checkout -b candidate/{latest_tag}"
@@ -186,7 +187,10 @@ def postversion():
             raise Exception("Failed to create candidate branch")
 
 
+        print("----------------------------------------------------------")
+        print("----------------------------------------------------------\n")
         print(f"Pushing candidate branch candidate/{latest_tag} to remote")
+        print("----------------------------------------------------------")
         cmd = f"git push {REMOTE} candidate/{latest_tag}"
         status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
         print(stdout)
@@ -195,7 +199,10 @@ def postversion():
             raise Exception("Failed to create candidate branch")
 
 
+        print("----------------------------------------------------------")
+        print("----------------------------------------------------------\n")
         print(f"Pushing candidate tag {latest_tag} to remote")
+        print("----------------------------------------------------------")
         cmd = f"git push {REMOTE} {latest_tag}"
         status, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
         print(stdout)
