@@ -38,7 +38,7 @@ def bump_version():
             5.3.3-rc.0 \u2192 5.3.3-rc.1
     """
     cmd_args = sys.argv[1:]
-    out = check_output(("bump2version", "--dry-run", "--list", "path"))
+    out = check_output(("bump2version", "--dry-run", "--list", "patch"))
     decoded = out.decode("ascii")
     lines = decoded.splitlines()
     current_is_rc = False
