@@ -113,38 +113,42 @@ def postversion():
     # load version after bump
     from __version__ import __version__
 
-    ##########################
-    # GET TAG INFO FROM GIT
-    ##########################
-    latest_tag_cmd = Popen(["git", "describe", "--exact-match", "--abbrev=0"], stdout=PIPE)
-    stdout = latest_tag_cmd.communicate()[0]
-    latest_tag = stdout.decode("ascii").strip()  # remove newline from decoded bytes
+    # ##########################
+    # # GET TAG INFO FROM GIT
+    # ##########################
+    # latest_tag_cmd = Popen(["git", "describe", "--exact-match", "--abbrev=0"], stdout=PIPE)
+    # stdout = latest_tag_cmd.communicate()[0]
+    # latest_tag = stdout.decode("ascii").strip()  # remove newline from decoded bytes
 
-    # sorted_tags_cmd = Popen(["git", "tag", "--sort=creatordate"], stdout=PIPE)
-    # tail_cmd = Popen(["tail", "-2"], stdin=sorted_tags_cmd.stdout, stdout=PIPE)
-    # head_cmd = Popen(["head", "-1"], stdin=tail_cmd.stdout, stdout=PIPE)
+    # # sorted_tags_cmd = Popen(["git", "tag", "--sort=creatordate"], stdout=PIPE)
+    # # tail_cmd = Popen(["tail", "-2"], stdin=sorted_tags_cmd.stdout, stdout=PIPE)
+    # # head_cmd = Popen(["head", "-1"], stdin=tail_cmd.stdout, stdout=PIPE)
 
-    p = Popen("git tag --sort=creatordate | tail -2 | head -1", shell=True, stdout=PIPE)
+    # p = Popen("git tag --sort=creatordate | tail -2 | head -1", shell=True, stdout=PIPE)
 
-    stdout, stderr = p.communicate()
+    # stdout, stderr = p.communicate()
 
-    print(stdout.decode("ascii").strip())  # remove newline from decoded bytes
     # print(stdout.decode("ascii").strip())  # remove newline from decoded bytes
+    # # print(stdout.decode("ascii").strip())  # remove newline from decoded bytes
 
-    # if sorted_tags_cmd.stdout:
-    #     sorted_tags_cmd.stdout.close()  # allow sorted_tags_cmd to receive a SIGPIPE if prev_tag_cmd exits.
+    # # if sorted_tags_cmd.stdout:
+    # #     sorted_tags_cmd.stdout.close()  # allow sorted_tags_cmd to receive a SIGPIPE if prev_tag_cmd exits.
 
-    # if tail_cmd.stdout:
-    #     tail_cmd.stdout.close()  # allow tail_cmd to receive a SIGPIPE if head_cmd exits.
+    # # if tail_cmd.stdout:
+    # #     tail_cmd.stdout.close()  # allow tail_cmd to receive a SIGPIPE if head_cmd exits.
 
-    # stdout = head_cmd.communicate()[0]
-    prev_tag = stdout.decode("ascii").strip()  # remove newline from decoded bytes
+    # # stdout = head_cmd.communicate()[0]
+    # prev_tag = stdout.decode("ascii").strip()  # remove newline from decoded bytes
 
     import git
     r = git.Repo(".")
-    out = r.git.log()
 
-    print(out)
+
+    latest_tag = git.describe("--abbrev", "0")
+    prev_tag = git.describe("--abbrev", "0", latest_tag+"^")
+
+    print(latest_tag)
+    print(prev_tag)
 
     # ##########################
     # # CREATE RELEASE CANDIDATE
