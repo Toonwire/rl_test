@@ -140,86 +140,91 @@ def postversion():
     # stdout = head_cmd.communicate()[0]
     prev_tag = stdout.decode("ascii").strip()  # remove newline from decoded bytes
 
+    import git
+    r = git.Repo(".")
+    out = r.git.log()
 
-    ##########################
-    # CREATE RELEASE CANDIDATE
-    ##########################
-    # check for release candidate version (-rc), e.g. 5.0.24-rc.0
+    print(out)
 
-    if re.match(r"^\d+\.\d+\.\d+-rc\.\d+$", __version__):
-        print(f"Creating candidate branch candidate/{latest_tag}")
-        completed_process = subprocess.run(["git", "checkout", "-b", f"candidate/{latest_tag}"], capture_output=True)
-        print(completed_process.stdout.decode("ascii"))
-        print(completed_process.stderr.decode("ascii"))
+    # ##########################
+    # # CREATE RELEASE CANDIDATE
+    # ##########################
+    # # check for release candidate version (-rc), e.g. 5.0.24-rc.0
 
-        print(f"Pushing candidate branch candidate/{latest_tag} to remote")
-        completed_process = subprocess.run(["git", "push", REMOTE, f"candidate/{latest_tag}"], capture_output=True)
-        print(completed_process.stdout.decode("ascii"))
-        print(completed_process.stderr.decode("ascii"))
+    # if re.match(r"^\d+\.\d+\.\d+-rc\.\d+$", __version__):
+    #     print(f"Creating candidate branch candidate/{latest_tag}")
+    #     completed_process = subprocess.run(["git", "checkout", "-b", f"candidate/{latest_tag}"], capture_output=True)
+    #     print(completed_process.stdout.decode("ascii"))
+    #     print(completed_process.stderr.decode("ascii"))
 
-        print(f"Pushing candidate tag {latest_tag} to remote")
-        completed_process = subprocess.run(["git", "push", REMOTE, latest_tag], capture_output=True)
-        print(completed_process.stdout.decode("ascii"))
-        print(completed_process.stderr.decode("ascii"))
+    #     print(f"Pushing candidate branch candidate/{latest_tag} to remote")
+    #     completed_process = subprocess.run(["git", "push", REMOTE, f"candidate/{latest_tag}"], capture_output=True)
+    #     print(completed_process.stdout.decode("ascii"))
+    #     print(completed_process.stderr.decode("ascii"))
 
-    ##########################
-    # CREATE RELEASE
-    ##########################
-    # check for stable release version, e.g. 5.0.24
+    #     print(f"Pushing candidate tag {latest_tag} to remote")
+    #     completed_process = subprocess.run(["git", "push", REMOTE, latest_tag], capture_output=True)
+    #     print(completed_process.stdout.decode("ascii"))
+    #     print(completed_process.stderr.decode("ascii"))
 
-    elif re.match(r"^\d+\.\d+\.\d+$", __version__):
-        print(f"Creating release branch release/{latest_tag}")
-        completed_process = subprocess.run(["git", "checkout", "-b", f"release/{latest_tag}"], capture_output=True)
-        print(completed_process.stdout.decode("ascii"))
-        print(completed_process.stderr.decode("ascii"))
+    # ##########################
+    # # CREATE RELEASE
+    # ##########################
+    # # check for stable release version, e.g. 5.0.24
 
-        print(f"Pushing release branch release/{latest_tag} to remote")
-        completed_process = subprocess.run(["git", "push", REMOTE, f"release/{latest_tag}"], capture_output=True)
-        print(completed_process.stdout.decode("ascii"))
-        print(completed_process.stderr.decode("ascii"))
+    # elif re.match(r"^\d+\.\d+\.\d+$", __version__):
+    #     print(f"Creating release branch release/{latest_tag}")
+    #     completed_process = subprocess.run(["git", "checkout", "-b", f"release/{latest_tag}"], capture_output=True)
+    #     print(completed_process.stdout.decode("ascii"))
+    #     print(completed_process.stderr.decode("ascii"))
 
-        print(f"Pushing release tag {latest_tag} to remote")
-        completed_process = subprocess.run(["git", "push", REMOTE, latest_tag], capture_output=True)
-        print(completed_process.stdout.decode("ascii"))
-        print(completed_process.stderr.decode("ascii"))
+    #     print(f"Pushing release branch release/{latest_tag} to remote")
+    #     completed_process = subprocess.run(["git", "push", REMOTE, f"release/{latest_tag}"], capture_output=True)
+    #     print(completed_process.stdout.decode("ascii"))
+    #     print(completed_process.stderr.decode("ascii"))
 
-        print("Fetching latest changes from 'master'")
-        completed_process = subprocess.run(["git", "checkout", "master"], capture_output=True)
-        print(completed_process.stdout.decode("ascii"))
-        print(completed_process.stderr.decode("ascii"))
+    #     print(f"Pushing release tag {latest_tag} to remote")
+    #     completed_process = subprocess.run(["git", "push", REMOTE, latest_tag], capture_output=True)
+    #     print(completed_process.stdout.decode("ascii"))
+    #     print(completed_process.stderr.decode("ascii"))
 
-        completed_process = subprocess.run(["git", "pull"], capture_output=True)
-        print(completed_process.stdout.decode("ascii"))
-        print(completed_process.stderr.decode("ascii"))
+    #     print("Fetching latest changes from 'master'")
+    #     completed_process = subprocess.run(["git", "checkout", "master"], capture_output=True)
+    #     print(completed_process.stdout.decode("ascii"))
+    #     print(completed_process.stderr.decode("ascii"))
 
-        print(f"Merging release/{latest_tag} back into 'master'")
-        completed_process = subprocess.run(["git", "merge", f"release/{latest_tag}"], capture_output=True)
-        print(completed_process.stdout.decode("ascii"))
-        print(completed_process.stderr.decode("ascii"))
+    #     completed_process = subprocess.run(["git", "pull"], capture_output=True)
+    #     print(completed_process.stdout.decode("ascii"))
+    #     print(completed_process.stderr.decode("ascii"))
 
-        print("Pushing release merge to master on remote")
-        completed_process = subprocess.run(["git", "push", REMOTE, "master"], capture_output=True)
-        print(completed_process.stdout.decode("ascii"))
-        print(completed_process.stderr.decode("ascii"))
+    #     print(f"Merging release/{latest_tag} back into 'master'")
+    #     completed_process = subprocess.run(["git", "merge", f"release/{latest_tag}"], capture_output=True)
+    #     print(completed_process.stdout.decode("ascii"))
+    #     print(completed_process.stderr.decode("ascii"))
 
-        print("Fetching latest changes from 'dev'")
-        completed_process = subprocess.run(["git", "checkout", "dev"], capture_output=True)
-        print(completed_process.stdout.decode("ascii"))
-        print(completed_process.stderr.decode("ascii"))
+    #     print("Pushing release merge to master on remote")
+    #     completed_process = subprocess.run(["git", "push", REMOTE, "master"], capture_output=True)
+    #     print(completed_process.stdout.decode("ascii"))
+    #     print(completed_process.stderr.decode("ascii"))
 
-        completed_process = subprocess.run(["git", "pull"], capture_output=True)
-        print(completed_process.stdout.decode("ascii"))
-        print(completed_process.stderr.decode("ascii"))
+    #     print("Fetching latest changes from 'dev'")
+    #     completed_process = subprocess.run(["git", "checkout", "dev"], capture_output=True)
+    #     print(completed_process.stdout.decode("ascii"))
+    #     print(completed_process.stderr.decode("ascii"))
 
-        print(f"Merging release/{latest_tag} back into 'dev'")
-        completed_process = subprocess.run(["git", "merge", f"release/{latest_tag}"], capture_output=True)
-        print(completed_process.stdout.decode("ascii"))
-        print(completed_process.stderr.decode("ascii"))
+    #     completed_process = subprocess.run(["git", "pull"], capture_output=True)
+    #     print(completed_process.stdout.decode("ascii"))
+    #     print(completed_process.stderr.decode("ascii"))
 
-        print("Pushing release merge to dev on remote")
-        completed_process = subprocess.run(["git", "push", REMOTE, "dev"], capture_output=True)
-        print(completed_process.stdout.decode("ascii"))
-        print(completed_process.stderr.decode("ascii"))
+    #     print(f"Merging release/{latest_tag} back into 'dev'")
+    #     completed_process = subprocess.run(["git", "merge", f"release/{latest_tag}"], capture_output=True)
+    #     print(completed_process.stdout.decode("ascii"))
+    #     print(completed_process.stderr.decode("ascii"))
+
+    #     print("Pushing release merge to dev on remote")
+    #     completed_process = subprocess.run(["git", "push", REMOTE, "dev"], capture_output=True)
+    #     print(completed_process.stdout.decode("ascii"))
+    #     print(completed_process.stderr.decode("ascii"))
 
 
 if __name__ == "__main__":
