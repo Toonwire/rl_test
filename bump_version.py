@@ -177,7 +177,7 @@ def postversion():
     if re.match(r"^\d+\.\d+\.\d+-rc\.\d+$", __version__):
         print(f"Creating candidate branch candidate/{latest_tag}")
         out = r.git.checkout("-b", f"candidate/{latest_tag}")
-        print(out)
+        print(f"out= {out}")
 
         logger.info(out)
 
