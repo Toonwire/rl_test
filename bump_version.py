@@ -144,8 +144,8 @@ def postversion():
     r = git.Repo(".")
 
 
-    latest_tag = git.describe("--abbrev", "0")
-    prev_tag = git.describe("--abbrev", "0", latest_tag+"^")
+    latest_tag = r.git.describe("--abbrev", "0")
+    prev_tag = r.git.describe("--abbrev", "0", latest_tag+"^")
 
     print(latest_tag)
     print(prev_tag)
