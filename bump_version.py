@@ -176,13 +176,12 @@ def postversion():
 
     if re.match(r"^\d+\.\d+\.\d+-rc\.\d+$", __version__):
         print(f"Creating candidate branch candidate/{latest_tag}")
-        # out = r.git.checkout("-b", f"candidate/{latest_tag}")
-        b = r.create_head(f"candidate/{latest_tag}")
+        out = r.git.checkout("-b", f"candidate/{latest_tag}", extended_output=True)
+        # b = r.create_head(f"candidate/{latest_tag}")
 
 
-        print(f"b= {b}")
+        print(f"out= {out}")
 
-        logger.info(b)
 
         print(f"Pushing candidate branch candidate/{latest_tag} to remote")
         out = r.git.push(REMOTE, f"candidate/{latest_tag}")
