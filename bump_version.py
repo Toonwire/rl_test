@@ -43,7 +43,7 @@ def bump_version():
             5.3.3-rc.0 \u2192 5.3.3-rc.1
     """
     cmd_args = sys.argv[1:]
-    out = check_output(("bump2version", "--dry-run", "--list", "patch"))
+    out = check_output(("bump2version", "--dry-run", "--list", "path"))
     decoded = out.decode("ascii")
     lines = decoded.splitlines()
     current_is_rc = False
@@ -56,12 +56,12 @@ def bump_version():
     for l in lines:
         if l.startswith("current_version"):
             print(l)
-            rc_matches = re.findall(r"=(\d+)\.(\d+)\.(\d+)-([a-z]+)\.(\d+)$", l)
+            # rc_matches = re.findall(r"=(\d+)\.(\d+)\.(\d+)-([a-z]+)\.(\d+)$", l)
 
-            if rc_matches:
-                major, minor, patch, release, build = rc_matches[0]
-                if release == RELEASE__RELEASE_CANDIDATE:
-                    current_is_rc = True
+            # if rc_matches:
+            #     major, minor, patch, release, build = rc_matches[0]
+            #     if release == RELEASE__RELEASE_CANDIDATE:
+            #         current_is_rc = True
 
         if l.startswith("new_version"):
             print(l)
@@ -76,6 +76,7 @@ def bump_version():
             if rc_matches:
                 major, minor, patch, release, build = rc_matches[0]
                 if release == RELEASE__RELEASE_CANDIDATE:
+                    current_is_rc = True
                     new_build = str(int(build) + 1)
                     build = new_build
                 else:
@@ -101,6 +102,8 @@ def bump_version():
             return False
 
         cmd_args = ["--new-version", f"{major}.{minor}.{patch}"] + cmd_args
+
+    print(cmd_args)
 
     completed_process = subprocess.run(["bump2version"] + cmd_args, capture_output=True)
 
