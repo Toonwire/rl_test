@@ -2,6 +2,7 @@ import re
 import subprocess
 import sys
 import logging
+import __version__
 
 # NOTE: Parts and their values must match the ones configured in `.bumpversion.cfg`
 PART__RELEASE = "release"
@@ -41,10 +42,6 @@ def bump_version():
         `python bump_version.py prerelease`
             5.3.3-rc.0 \u2192 5.3.3-rc.1
     """
-    # load version pre bump
-    from __version__ import __version__
-
-    print(f"Current version = {__version__}")
     cmd_args = sys.argv[1:]
     is_rc = False
 
@@ -53,13 +50,13 @@ def bump_version():
     patch = 0
     release = RELEASE__RELEASE_CANDIDATE
     build = 0
-    base_matches = re.findall(r"^(\d+)\.(\d+)\.(\d+)$", __version__)
+    base_matches = re.findall(r"^(\d+)\.(\d+)\.(\d+)$", __version__.__version__)
     if base_matches:
         major, minor, patch = base_matches[0]
         new_patch = str(int(patch) + 1)
         patch = new_patch
 
-    rc_matches = re.findall(r"^(\d+)\.(\d+)\.(\d+)-([a-z]+)\.(\d+)$", __version__)
+    rc_matches = re.findall(r"^(\d+)\.(\d+)\.(\d+)-([a-z]+)\.(\d+)$", __version__.__version__)
     if rc_matches:
         major, minor, patch, release, build = rc_matches[0]
         if release == RELEASE__RELEASE_CANDIDATE:
@@ -114,9 +111,11 @@ def postversion():
     - Pushes the new version tag to remote.
     """
     # load version after bump
-    from __version__ import __version__
+    from importlib import reload
 
-    print(f"New version = {__version__}")
+    reload(__version__)
+
+    print(f"New version = {__version__.__version__}")
 
     # ##########################
     # # GET TAG INFO FROM GIT
@@ -129,7 +128,7 @@ def postversion():
     # ##########################
     # # check for release candidate version (-rc), e.g. 5.0.24-rc.0
 
-    if re.match(r"^\d+\.\d+\.\d+-rc\.\d+$", __version__):
+    if re.match(r"^\d+\.\d+\.\d+-rc\.\d+$", __version__.__version__):
         print()
         print("----------------------------------------------------------")
         print(f"Creating candidate branch candidate/{latest_tag}")
@@ -159,7 +158,7 @@ def postversion():
     # ##########################
     # # check for stable release version, e.g. 5.0.24
 
-    elif re.match(r"^\d+\.\d+\.\d+$", __version__):
+    elif re.match(r"^\d+\.\d+\.\d+$", __version__.__version__):
         print()
         print("----------------------------------------------------------")
         print(f"Creating release branch release/{latest_tag}")
