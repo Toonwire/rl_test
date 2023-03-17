@@ -1,7 +1,6 @@
 import re
 import subprocess
 import sys
-from subprocess import check_output
 import logging
 
 # NOTE: Parts and their values must match the ones configured in `.bumpversion.cfg`
@@ -24,8 +23,8 @@ logger = logging.getLogger()
 
 def main():
     bump_ok = bump_version()
-    # if bump_ok:
-    #     postversion()
+    if bump_ok:
+        postversion()
 
 
 def bump_version():
@@ -46,11 +45,7 @@ def bump_version():
     from __version__ import __version__
 
     print(f"Current version = {__version__}")
-
     cmd_args = sys.argv[1:]
-    # out = check_output(("bump2version", "--dry-run", "--list", "path"))
-    # decoded = out.decode("ascii")
-    # lines = decoded.splitlines()
     is_rc = False
 
     major = 0
@@ -93,8 +88,6 @@ def bump_version():
 
         cmd_args = ["--new-version", f"{major}.{minor}.{patch}"] + cmd_args
 
-    print(cmd_args)
-
     completed_process = subprocess.run(["bump2version"] + cmd_args, capture_output=True)
 
     if completed_process.returncode != 0:
@@ -122,6 +115,8 @@ def postversion():
     """
     # load version after bump
     from __version__ import __version__
+
+    print(f"New version = {__version__}")
 
     # ##########################
     # # GET TAG INFO FROM GIT
