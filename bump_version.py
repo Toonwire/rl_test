@@ -55,6 +55,7 @@ def bump_version():
     build = 0
     for l in lines:
         if l.startswith("current_version"):
+            print(l)
             rc_matches = re.findall(r"=(\d+)\.(\d+)\.(\d+)-([a-z]+)\.(\d+)$", l)
 
             major, minor, patch, release, build = rc_matches[0]
@@ -62,6 +63,7 @@ def bump_version():
                 current_is_rc = True
 
         if l.startswith("new_version"):
+            print(l)
             base_matches = re.findall(r"=(\d+)\.(\d+)\.(\d+)$", l)
             if base_matches:
                 major, minor, patch = base_matches[0]
