@@ -2,9 +2,6 @@ import re
 import subprocess
 import sys
 from subprocess import check_output
-from subprocess import PIPE
-from subprocess import Popen
-import git
 import logging
 
 # NOTE: Parts and their values must match the ones configured in `.bumpversion.cfg`
@@ -127,35 +124,6 @@ def postversion():
     # ##########################
     # # GET TAG INFO FROM GIT
     # ##########################
-    # latest_tag_cmd = Popen(["git", "describe", "--exact-match", "--abbrev=0"], stdout=PIPE)
-    # stdout = latest_tag_cmd.communicate()[0]
-    # latest_tag = stdout.decode("ascii").strip()  # remove newline from decoded bytes
-
-    # # sorted_tags_cmd = Popen(["git", "tag", "--sort=creatordate"], stdout=PIPE)
-    # # tail_cmd = Popen(["tail", "-2"], stdin=sorted_tags_cmd.stdout, stdout=PIPE)
-    # # head_cmd = Popen(["head", "-1"], stdin=tail_cmd.stdout, stdout=PIPE)
-
-    # p = Popen("git tag --sort=creatordate | tail -2 | head -1", shell=True, stdout=PIPE)
-
-    # stdout, stderr = p.communicate()
-
-    # print(stdout.decode("ascii").strip())  # remove newline from decoded bytes
-    # # print(stdout.decode("ascii").strip())  # remove newline from decoded bytes
-
-    # # if sorted_tags_cmd.stdout:
-    # #     sorted_tags_cmd.stdout.close()  # allow sorted_tags_cmd to receive a SIGPIPE if prev_tag_cmd exits.
-
-    # # if tail_cmd.stdout:
-    # #     tail_cmd.stdout.close()  # allow tail_cmd to receive a SIGPIPE if head_cmd exits.
-
-    # # stdout = head_cmd.communicate()[0]
-    # prev_tag = stdout.decode("ascii").strip()  # remove newline from decoded bytes
-    # from git.repo import Repo as GitRepo
-    # r = GitRepo(".")
-
-    # latest_tag = r.git.describe("--abbrev=0")
-    # prev_tag = r.git.describe("--abbrev=0", f"{latest_tag}^")
-
     completed_process = subprocess.run(["git", "describe", "--abbrev=0"], capture_output=True)
     latest_tag = completed_process.stdout.decode("ascii").strip()
 
@@ -172,10 +140,6 @@ def postversion():
         completed_process = subprocess.run(["git", "checkout", "-b", f"candidate/{latest_tag}"], capture_output=True)
         print(completed_process.stdout.decode("ascii"))
         print(completed_process.stderr.decode("ascii"))
-        # cmd = f"git checkout -b candidate/{latest_tag}"
-        # _, stdout, stderr = r.git.execute(*cmd.split(" "), with_extended_output=True)
-        # print(stdout)
-        # print(stderr)
 
         print()
         print("----------------------------------------------------------")
@@ -184,10 +148,6 @@ def postversion():
         completed_process = subprocess.run(["git", "push", REMOTE, f"candidate/{latest_tag}"], capture_output=True)
         print(completed_process.stdout.decode("ascii"))
         print(completed_process.stderr.decode("ascii"))
-        # cmd = f"git push --set-upstream {REMOTE} candidate/{latest_tag}"
-        # _, stdout, stderr = r.git.execute(*cmd.split(" "), with_extended_output=True)
-        # print(stdout)
-        # print(stderr)
 
         print()
         print("----------------------------------------------------------")
@@ -196,10 +156,6 @@ def postversion():
         completed_process = subprocess.run(["git", "push", REMOTE, latest_tag], capture_output=True)
         print(completed_process.stdout.decode("ascii"))
         print(completed_process.stderr.decode("ascii"))
-        # cmd = f"git push {REMOTE} {latest_tag}"
-        # _, stdout, stderr = r.git.execute(*cmd.split(" "), with_extended_output=True)
-        # print(stdout)
-        # print(stderr)
 
     # ##########################
     # # CREATE RELEASE
@@ -214,10 +170,6 @@ def postversion():
         completed_process = subprocess.run(["git", "checkout", "-b", f"release/{latest_tag}"], capture_output=True)
         print(completed_process.stdout.decode("ascii"))
         print(completed_process.stderr.decode("ascii"))
-        # cmd = f"git checkout -b release/{latest_tag}"
-        # _, stdout, stderr = r.git.execute(*cmd.split(" "), with_extended_output=True)
-        # print(stdout)
-        # print(stderr)
 
         print()
         print("----------------------------------------------------------")
@@ -226,10 +178,6 @@ def postversion():
         completed_process = subprocess.run(["git", "push", REMOTE, f"release/{latest_tag}"], capture_output=True)
         print(completed_process.stdout.decode("ascii"))
         print(completed_process.stderr.decode("ascii"))
-        # cmd = f"git push --set-upstream {REMOTE} release/{latest_tag}"
-        # _, stdout, stderr = r.git.execute(*cmd.split(" "), with_extended_output=True)
-        # print(stdout)
-        # print(stderr)
 
         print()
         print("----------------------------------------------------------")
@@ -238,10 +186,6 @@ def postversion():
         completed_process = subprocess.run(["git", "push", REMOTE, latest_tag], capture_output=True)
         print(completed_process.stdout.decode("ascii"))
         print(completed_process.stderr.decode("ascii"))
-        # cmd = f"git push {REMOTE} {latest_tag}"
-        # _, stdout, stderr = r.git.execute(*cmd.split(" "), with_extended_output=True)
-        # print(stdout)
-        # print(stderr)
 
         print()
         print("----------------------------------------------------------")
@@ -254,10 +198,6 @@ def postversion():
         completed_process = subprocess.run(["git", "pull"], capture_output=True)
         print(completed_process.stdout.decode("ascii"))
         print(completed_process.stderr.decode("ascii"))
-        # cmd = f"git checkout {MASTER_BRANCH}"
-        # _, stdout, stderr = r.git.execute(*cmd.split(" "), with_extended_output=True)
-        # print(stdout)
-        # print(stderr)
 
         print()
         print("----------------------------------------------------------")
@@ -266,10 +206,6 @@ def postversion():
         completed_process = subprocess.run(["git", "merge", f"release/{latest_tag}"], capture_output=True)
         print(completed_process.stdout.decode("ascii"))
         print(completed_process.stderr.decode("ascii"))
-        # cmd = f"git merge release/{latest_tag}"
-        # _, stdout, stderr = r.git.execute(*cmd.split(" "), with_extended_output=True)
-        # print(stdout)
-        # print(stderr)
 
         print()
         print("----------------------------------------------------------")
@@ -278,10 +214,6 @@ def postversion():
         completed_process = subprocess.run(["git", "push", REMOTE, "master"], capture_output=True)
         print(completed_process.stdout.decode("ascii"))
         print(completed_process.stderr.decode("ascii"))
-        # cmd = f"git push {REMOTE} {MASTER_BRANCH}"
-        # _, stdout, stderr = r.git.execute(*cmd.split(" "), with_extended_output=True)
-        # print(stdout)
-        # print(stderr)
 
         print()
         print("----------------------------------------------------------")
@@ -290,18 +222,10 @@ def postversion():
         completed_process = subprocess.run(["git", "checkout", "dev"], capture_output=True)
         print(completed_process.stdout.decode("ascii"))
         print(completed_process.stderr.decode("ascii"))
-        # cmd = f"git checkout {DEV_BRANCH}"
-        # _, stdout, stderr = r.git.execute(*cmd.split(" "), with_extended_output=True)
-        # print(stdout)
-        # print(stderr)
 
         completed_process = subprocess.run(["git", "pull"], capture_output=True)
         print(completed_process.stdout.decode("ascii"))
         print(completed_process.stderr.decode("ascii"))
-        # cmd = "git pull"
-        # _, stdout, stderr = r.git.execute(*cmd.split(" "), with_extended_output=True)
-        # print(stdout)
-        # print(stderr)
 
         print()
         print("----------------------------------------------------------")
@@ -310,10 +234,6 @@ def postversion():
         completed_process = subprocess.run(["git", "merge", f"release/{latest_tag}"], capture_output=True)
         print(completed_process.stdout.decode("ascii"))
         print(completed_process.stderr.decode("ascii"))
-        # cmd = f"git merge release/{latest_tag}"
-        # _, stdout, stderr = r.git.execute(cmd.split(" "), with_extended_output=True)
-        # print(stdout)
-        # print(stderr)
 
         print()
         print("----------------------------------------------------------")
@@ -322,10 +242,6 @@ def postversion():
         completed_process = subprocess.run(["git", "push", REMOTE, "dev"], capture_output=True)
         print(completed_process.stdout.decode("ascii"))
         print(completed_process.stderr.decode("ascii"))
-        # cmd = f"git push {REMOTE} {DEV_BRANCH}"
-        # _, stdout, stderr = r.git.execute(*cmd.split(" "), with_extended_output=True)
-        # print(stdout)
-        # print(stderr)
 
 
 if __name__ == "__main__":
