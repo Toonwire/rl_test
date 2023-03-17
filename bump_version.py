@@ -45,6 +45,8 @@ def bump_version():
     # load version pre bump
     from __version__ import __version__
 
+    print(f"Current version = {__version__}")
+
     cmd_args = sys.argv[1:]
     # out = check_output(("bump2version", "--dry-run", "--list", "path"))
     # decoded = out.decode("ascii")
