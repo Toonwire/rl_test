@@ -159,10 +159,6 @@ def postversion():
     completed_process = subprocess.run(["git", "describe", "--abbrev=0"], capture_output=True)
     latest_tag = completed_process.stdout.decode("ascii")
 
-    print(f">>>>>>>>>>>>>>> latest_tag={latest_tag}")
-
-    return
-
     # ##########################
     # # CREATE RELEASE CANDIDATE
     # ##########################
