@@ -24,8 +24,8 @@ logger = logging.getLogger()
 
 def main():
     bump_ok = bump_version()
-    # if bump_ok:
-    #     postversion()
+    if bump_ok:
+        postversion()
 
 
 def bump_version():
@@ -46,7 +46,7 @@ def bump_version():
     out = check_output(("bump2version", "--dry-run", "--list", "path"))
     decoded = out.decode("ascii")
     lines = decoded.splitlines()
-    current_is_rc = False
+    is_rc = False
 
     major = 0
     minor = 0
@@ -54,17 +54,7 @@ def bump_version():
     release = RELEASE__RELEASE_CANDIDATE
     build = 0
     for l in lines:
-        if l.startswith("current_version"):
-            print(l)
-            # rc_matches = re.findall(r"=(\d+)\.(\d+)\.(\d+)-([a-z]+)\.(\d+)$", l)
-
-            # if rc_matches:
-            #     major, minor, patch, release, build = rc_matches[0]
-            #     if release == RELEASE__RELEASE_CANDIDATE:
-            #         current_is_rc = True
-
         if l.startswith("new_version"):
-            print(l)
             base_matches = re.findall(r"=(\d+)\.(\d+)\.(\d+)$", l)
             if base_matches:
                 major, minor, patch = base_matches[0]
@@ -76,11 +66,11 @@ def bump_version():
             if rc_matches:
                 major, minor, patch, release, build = rc_matches[0]
                 if release == RELEASE__RELEASE_CANDIDATE:
-                    current_is_rc = True
+                    is_rc = True
                     new_build = str(int(build) + 1)
                     build = new_build
                 else:
-                    current_is_rc = False
+                    is_rc = False
                     release = RELEASE__RELEASE_CANDIDATE
                     build = 0
 
@@ -92,7 +82,7 @@ def bump_version():
             f"{major}.{minor}.{patch}-{release}.{build}",
         ] + cmd_args
 
-    elif current_is_rc and PART__BUILD not in cmd_args:
+    elif is_rc and PART__BUILD not in cmd_args:
         # warn about deviating from release flow
         if PART__RELEASE not in cmd_args:
             print(
@@ -115,7 +105,6 @@ def bump_version():
 
     print(completed_process.stderr.decode("ascii"))
     print(completed_process.stdout.decode("ascii"))
-
     return True
 
 
