@@ -24,8 +24,8 @@ logger = logging.getLogger()
 
 def main():
     bump_ok = bump_version()
-    if bump_ok:
-        postversion()
+    # if bump_ok:
+    #     postversion()
 
 
 def bump_version():
