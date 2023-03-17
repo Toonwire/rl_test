@@ -58,9 +58,10 @@ def bump_version():
             print(l)
             rc_matches = re.findall(r"=(\d+)\.(\d+)\.(\d+)-([a-z]+)\.(\d+)$", l)
 
-            major, minor, patch, release, build = rc_matches[0]
-            if release == RELEASE__RELEASE_CANDIDATE:
-                current_is_rc = True
+            if rc_matches:
+                major, minor, patch, release, build = rc_matches[0]
+                if release == RELEASE__RELEASE_CANDIDATE:
+                    current_is_rc = True
 
         if l.startswith("new_version"):
             print(l)
