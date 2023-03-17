@@ -58,13 +58,13 @@ def bump_version():
     patch = 0
     release = RELEASE__RELEASE_CANDIDATE
     build = 0
-    base_matches = re.findall(r"=(\d+)\.(\d+)\.(\d+)$", __version__)
+    base_matches = re.findall(r"^(\d+)\.(\d+)\.(\d+)$", __version__)
     if base_matches:
         major, minor, patch = base_matches[0]
         new_patch = str(int(patch) + 1)
         patch = new_patch
 
-    rc_matches = re.findall(r"=(\d+)\.(\d+)\.(\d+)-([a-z]+)\.(\d+)$", __version__)
+    rc_matches = re.findall(r"^(\d+)\.(\d+)\.(\d+)-([a-z]+)\.(\d+)$", __version__)
     if rc_matches:
         major, minor, patch, release, build = rc_matches[0]
         if release == RELEASE__RELEASE_CANDIDATE:
