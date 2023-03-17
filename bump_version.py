@@ -24,8 +24,8 @@ logger = logging.getLogger()
 
 def main():
     bump_ok = bump_version()
-    if bump_ok:
-        postversion()
+    # if bump_ok:
+    #     postversion()
 
 
 def bump_version():
@@ -47,12 +47,20 @@ def bump_version():
     decoded = out.decode("ascii")
     lines = decoded.splitlines()
     current_is_rc = False
+
     major = 0
     minor = 0
     patch = 0
     release = RELEASE__RELEASE_CANDIDATE
     build = 0
     for l in lines:
+        if l.startswith("current_version"):
+            rc_matches = re.findall(r"=(\d+)\.(\d+)\.(\d+)-([a-z]+)\.(\d+)$", l)
+
+            major, minor, patch, release, build = rc_matches[0]
+            if release == RELEASE__RELEASE_CANDIDATE:
+                current_is_rc = True
+
         if l.startswith("new_version"):
             base_matches = re.findall(r"=(\d+)\.(\d+)\.(\d+)$", l)
             if base_matches:
@@ -65,7 +73,6 @@ def bump_version():
             if rc_matches:
                 major, minor, patch, release, build = rc_matches[0]
                 if release == RELEASE__RELEASE_CANDIDATE:
-                    current_is_rc = True
                     new_build = str(int(build) + 1)
                     build = new_build
                 else:
