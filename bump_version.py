@@ -43,20 +43,21 @@ def bump_version():
             5.3.3-rc.0 \u2192 5.3.3-rc.1
     """
     cmd_args = sys.argv[1:]
-    is_rc = False
 
+    current_version = __version__.__version__
+    is_rc = False
     major = 0
     minor = 0
     patch = 0
     release = RELEASE__RELEASE_CANDIDATE
     build = 0
-    base_matches = re.findall(r"^(\d+)\.(\d+)\.(\d+)$", __version__.__version__)
+    base_matches = re.findall(r"^(\d+)\.(\d+)\.(\d+)$", current_version)
     if base_matches:
         major, minor, patch = base_matches[0]
         new_patch = str(int(patch) + 1)
         patch = new_patch
 
-    rc_matches = re.findall(r"^(\d+)\.(\d+)\.(\d+)-([a-z]+)\.(\d+)$", __version__.__version__)
+    rc_matches = re.findall(r"^(\d+)\.(\d+)\.(\d+)-([a-z]+)\.(\d+)$", current_version)
     if rc_matches:
         major, minor, patch, release, build = rc_matches[0]
         if release == RELEASE__RELEASE_CANDIDATE:
@@ -114,8 +115,7 @@ def postversion():
     from importlib import reload
 
     reload(__version__)
-
-    print(f"New version = {__version__.__version__}")
+    new_version = __version__.__version__
 
     # ##########################
     # # GET TAG INFO FROM GIT
@@ -128,7 +128,7 @@ def postversion():
     # ##########################
     # # check for release candidate version (-rc), e.g. 5.0.24-rc.0
 
-    if re.match(r"^\d+\.\d+\.\d+-rc\.\d+$", __version__.__version__):
+    if re.match(r"^\d+\.\d+\.\d+-rc\.\d+$", new_version):
         print()
         print("----------------------------------------------------------")
         print(f"Creating candidate branch candidate/{latest_tag}")
