@@ -42,10 +42,13 @@ def bump_version():
         `python bump_version.py prerelease`
             5.3.3-rc.0 \u2192 5.3.3-rc.1
     """
+    # load version pre bump
+    from __version__ import __version__
+
     cmd_args = sys.argv[1:]
-    out = check_output(("bump2version", "--dry-run", "--list", "path"))
-    decoded = out.decode("ascii")
-    lines = decoded.splitlines()
+    # out = check_output(("bump2version", "--dry-run", "--list", "path"))
+    # decoded = out.decode("ascii")
+    # lines = decoded.splitlines()
     is_rc = False
 
     major = 0
@@ -53,28 +56,23 @@ def bump_version():
     patch = 0
     release = RELEASE__RELEASE_CANDIDATE
     build = 0
-    for l in lines:
-        if l.startswith("new_version"):
-            base_matches = re.findall(r"=(\d+)\.(\d+)\.(\d+)$", l)
-            if base_matches:
-                major, minor, patch = base_matches[0]
-                new_patch = str(int(patch) + 1)
-                patch = new_patch
-                break
+    base_matches = re.findall(r"=(\d+)\.(\d+)\.(\d+)$", __version__)
+    if base_matches:
+        major, minor, patch = base_matches[0]
+        new_patch = str(int(patch) + 1)
+        patch = new_patch
 
-            rc_matches = re.findall(r"=(\d+)\.(\d+)\.(\d+)-([a-z]+)\.(\d+)$", l)
-            if rc_matches:
-                major, minor, patch, release, build = rc_matches[0]
-                if release == RELEASE__RELEASE_CANDIDATE:
-                    is_rc = True
-                    new_build = str(int(build) + 1)
-                    build = new_build
-                else:
-                    is_rc = False
-                    release = RELEASE__RELEASE_CANDIDATE
-                    build = 0
-
-                break
+    rc_matches = re.findall(r"=(\d+)\.(\d+)\.(\d+)-([a-z]+)\.(\d+)$", __version__)
+    if rc_matches:
+        major, minor, patch, release, build = rc_matches[0]
+        if release == RELEASE__RELEASE_CANDIDATE:
+            is_rc = True
+            new_build = str(int(build) + 1)
+            build = new_build
+        else:
+            is_rc = False
+            release = RELEASE__RELEASE_CANDIDATE
+            build = 0
 
     if PART__PRE_RELEASE in cmd_args:
         cmd_args = [
